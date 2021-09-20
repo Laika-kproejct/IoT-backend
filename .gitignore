@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 비밀키 ###
+secrets/
