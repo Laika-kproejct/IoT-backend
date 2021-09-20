@@ -1,6 +1,7 @@
 package com.laika.IoT.exception;
 
 
+import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -59,5 +60,16 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, ErrorCode.UNSUPPORTED_MEDIA_TYPE.getStatus());
+    }
+    @ExceptionHandler(CustomJwtRuntimeException.class)
+    protected ResponseEntity<ErrorResponse> handleJwtException(CustomJwtRuntimeException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.INVALID_JWT_TOKEN.getCode())
+                .message(ErrorCode.INVALID_JWT_TOKEN.getMessage())
+                .status(ErrorCode.INVALID_JWT_TOKEN.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.INVALID_JWT_TOKEN.getStatus());
     }
 }
