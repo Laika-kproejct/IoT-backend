@@ -17,7 +17,7 @@ import javax.validation.Valid;
 public class ManagerController {
     private final ManagerService managerService;
 
-    @PostMapping("/manager/register") // 학교 공지사항 크롤링 요청
+    @PostMapping("/manager/register")
     public ResponseEntity<CommonResponse> requestRegister(@Valid @RequestBody RequestManger.Register registerDto) {
 
         managerService.register(registerDto);
