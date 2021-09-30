@@ -2,6 +2,7 @@ package com.laika.IoT.exception;
 
 
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
+import com.laika.IoT.exception.errors.RegisterFailedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -71,5 +72,16 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, ErrorCode.INVALID_JWT_TOKEN.getStatus());
+    }
+    @ExceptionHandler(RegisterFailedException.class)
+    protected ResponseEntity<ErrorResponse> handleRegisterFailedException(RegisterFailedException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.REGISTER_FAILED.getCode())
+                .message(ErrorCode.REGISTER_FAILED.getMessage())
+                .status(ErrorCode.REGISTER_FAILED.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.REGISTER_FAILED.getStatus());
     }
 }
