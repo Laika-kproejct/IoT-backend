@@ -2,6 +2,7 @@ package com.laika.IoT.exception;
 
 
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
+import com.laika.IoT.exception.errors.LoginFailedException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -83,5 +84,16 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, ErrorCode.REGISTER_FAILED.getStatus());
+    }
+    @ExceptionHandler(LoginFailedException.class)
+    protected ResponseEntity<ErrorResponse> handleLoginFailedException(LoginFailedException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.LOGIN_FAILED.getCode())
+                .message(ErrorCode.LOGIN_FAILED.getMessage())
+                .status(ErrorCode.LOGIN_FAILED.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.LOGIN_FAILED.getStatus());
     }
 }
