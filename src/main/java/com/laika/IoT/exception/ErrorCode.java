@@ -13,7 +13,8 @@ public enum ErrorCode {
     LOGIN_FAILED(HttpStatus.NOT_FOUND, "AUTH_002", " LOGIN_FAILED."),
     REGISTER_FAILED(HttpStatus.FORBIDDEN, "AUTH_003", "REGISTER_FAILED"),
     REQUEST_PARAMETER_BIND_FAILED(HttpStatus.BAD_REQUEST, "REQ_001", "PARAMETER_BIND_FAILED"),
-    INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH004", "INVALID_JWT_TOKEN.");
+    INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH004", "INVALID_JWT_TOKEN."),
+    REGISTER_SENSOR_FAILED(HttpStatus.FORBIDDEN, "SENSOR_001", "센서 등록 실패, 토큰 중복 여부, 관리대상자 존재 여부 확인");
 
     private final String code;
     private final String message;
