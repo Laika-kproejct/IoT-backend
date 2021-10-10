@@ -4,6 +4,7 @@ package com.laika.IoT.exception;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
+import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -95,5 +96,16 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, ErrorCode.LOGIN_FAILED.getStatus());
+    }
+    @ExceptionHandler(RegisterSensorFailedException.class)
+    protected ResponseEntity<ErrorResponse> handleRegisterSensorFailedException(RegisterSensorFailedException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.REGISTER_SENSOR_FAILED.getCode())
+                .message(ErrorCode.REGISTER_SENSOR_FAILED.getMessage())
+                .status(ErrorCode.REGISTER_SENSOR_FAILED.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.REGISTER_SENSOR_FAILED.getStatus());
     }
 }
