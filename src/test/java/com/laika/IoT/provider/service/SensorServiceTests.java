@@ -1,6 +1,6 @@
 package com.laika.IoT.provider.service;
 
-import com.laika.IoT.entity.Recipient;
+import com.laika.IoT.entity.Home;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.RecipientRepository;
 import com.laika.IoT.web.dto.RequestIoTSensor;
@@ -29,18 +29,18 @@ public class SensorServiceTests {
     @Transactional
     void registerSensorTest() {
         //관리 대상자 생성
-        Recipient recipient = new Recipient();
-        recipient = recipientRepository.save(recipient);
+        Home home = new Home();
+        home = recipientRepository.save(home);
         //센서 등록
         RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
-                .recipientId(recipient.getId())
+                .homeId(home.getId())
                 .build();
-        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(registerDto.getRecipientId(), registerDto.getToken()).orElseGet(()->null);
+        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(registerDto.getHomeId(), registerDto.getToken()).orElseGet(()->null);
 
         //검증
         assertNotNull(responseIoTSensor);
-        assertNotNull(recipient.getId());
+        assertNotNull(home.getId());
         System.out.println(responseIoTSensor.getRegisteredToken());
-        System.out.println(recipient.getId()+"아이디임");
+        System.out.println(home.getId()+"아이디임");
     }
 }

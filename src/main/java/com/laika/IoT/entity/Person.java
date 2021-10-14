@@ -6,25 +6,25 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Table(name="Sensor")
+@Table(name="Person")
 @Entity
 @Getter
 @NoArgsConstructor
-public class IoTSensor {
+public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="token")
-    private String token;
+    @Column(name="name")
+    private String name;
 
     @ManyToOne(targetEntity = Home.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "home_id")
     private Home home;
 
     @Builder
-    public IoTSensor(String token, Home home) {
-        this.token = token;
+    public Person(String name, Home home) {
+        this.name = name;
         this.home = home;
     }
 }

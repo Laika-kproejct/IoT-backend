@@ -8,18 +8,21 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//관리 대상자
-@Table(name="Recipient")
+//관리 대상자 집
+@Table(name="Home")
 @Entity
 @Getter
 @NoArgsConstructor
-public class Recipient {
+public class Home {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "recipient")
+    @OneToMany(mappedBy = "home")
     private List<IoTSensor> sensors = new ArrayList<IoTSensor>();
+
+    @OneToMany(mappedBy = "home")
+    private List<Person> personList = new ArrayList<>();
 
     @ManyToOne(targetEntity = Manager.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
@@ -27,6 +30,9 @@ public class Recipient {
 
     public void addSensor(IoTSensor sensor) {
         this.sensors.add(sensor);
+    }
+    public void addPerson(Person person) {
+        this.personList.add(person);
     }
 
 }

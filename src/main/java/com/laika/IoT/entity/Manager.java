@@ -30,7 +30,7 @@ public class Manager {
     private String refreshToken;
 
     @OneToMany(mappedBy = "manager")
-    private List<Recipient> recipients;
+    private List<Home> homes;
 
     @Builder
     public Manager(String email, String password, String salt) {
