@@ -9,6 +9,7 @@ public interface ManagerServiceInterface {
     void register(RequestManger.Register registerDto);
     Optional<ResponseManager.Login> login(RequestManger.Login loginDto);
     Optional<ResponseManager.Token> refreshToken(String token);
+    void registerHome(String managerEmail, String address);
     String createAccessToken(String id);
     String createRefreshToken(String id);
 }

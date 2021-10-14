@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name="Manager")
@@ -30,7 +31,7 @@ public class Manager {
     private String refreshToken;
 
     @OneToMany(mappedBy = "manager")
-    private List<Home> homes;
+    private List<Home> homes = new ArrayList<>();
 
     @Builder
     public Manager(String email, String password, String salt) {
@@ -38,7 +39,9 @@ public class Manager {
         this.password = password;
         this.salt = salt;
     }
-
+    public void addHome(Home home) {
+        this.homes.add(home);
+    }
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
