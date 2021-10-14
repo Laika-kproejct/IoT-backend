@@ -3,7 +3,7 @@ package com.laika.IoT.provider.service;
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.SensorServiceInterface;
 import com.laika.IoT.entity.IoTSensor;
-import com.laika.IoT.entity.Recipient;
+import com.laika.IoT.entity.Home;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -30,7 +30,7 @@ public class SensorService implements SensorServiceInterface {
     @Override
     public Optional<ResponseIoTSensor.Register> register(Long recipientId, String token) {
         //관리대상자 존재여부 확인
-        Recipient recipient = recipientRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
+        Home home = recipientRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
         //
         String newToken = token;
         if(newToken == null) {
@@ -47,10 +47,10 @@ public class SensorService implements SensorServiceInterface {
         //등록
         IoTSensor newSensor = IoTSensor.builder()
                 .token(newToken)
-                .recipient(recipient)
+                .home(home)
                 .build();
         newSensor = ioTSensorRepository.save(newSensor);
-        recipient.addSensor(newSensor);
+        home.addSensor(newSensor);
         //response dto
         ResponseIoTSensor.Register responseIoTSensor = ResponseIoTSensor.Register.builder()
                 .registeredToken(newSensor.getToken())
