@@ -5,12 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Table(name="Manager")
 @Entity
 @Getter
 @NoArgsConstructor
-public class Manager {
+public class Manager { 
+    //관리대상자를 관리하는 관리자 엔티티
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,10 +29,17 @@ public class Manager {
     @Column(name="refreshToken")
     private String refreshToken;
 
+    @OneToMany(mappedBy = "manager")
+    private List<Recipient> recipients;
+
     @Builder
     public Manager(String email, String password, String salt) {
         this.email = email;
         this.password = password;
         this.salt = salt;
+    }
+
+    public void changeRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
