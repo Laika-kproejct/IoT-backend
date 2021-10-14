@@ -21,6 +21,10 @@ public class Recipient {
     @OneToMany(mappedBy = "recipient")
     private List<IoTSensor> sensors = new ArrayList<IoTSensor>();
 
+    @ManyToOne(targetEntity = Manager.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
     public void addSensor(IoTSensor sensor) {
         this.sensors.add(sensor);
     }
