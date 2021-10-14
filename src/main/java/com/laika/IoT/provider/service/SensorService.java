@@ -8,7 +8,7 @@ import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.IoTSensorRepository;
-import com.laika.IoT.repository.RecipientRepository;
+import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SensorService implements SensorServiceInterface {
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
-    private final RecipientRepository recipientRepository;
+    private final HomeRepository homeRepository;
     private final IoTSensorRepository ioTSensorRepository;
 
     @Transactional
     @Override
     public Optional<ResponseIoTSensor.Register> register(Long recipientId, String token) {
         //관리대상자 존재여부 확인
-        Home home = recipientRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
+        Home home = homeRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
         //
         String newToken = token;
         if(newToken == null) {

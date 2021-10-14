@@ -2,7 +2,7 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.repository.IoTSensorRepository;
-import com.laika.IoT.repository.RecipientRepository;
+import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.web.dto.RequestIoTSensor;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ public class SensorServiceTests {
     @Autowired
     private SensorService sensorService;
     @Autowired
-    private RecipientRepository recipientRepository;
+    private HomeRepository homeRepository;
     @Autowired
     private IoTSensorRepository ioTSensorRepository;
 
@@ -30,7 +30,7 @@ public class SensorServiceTests {
     void registerSensorTest() {
         //관리 대상자 생성
         Home home = new Home();
-        home = recipientRepository.save(home);
+        home = homeRepository.save(home);
         //센서 등록
         RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
                 .homeId(home.getId())
