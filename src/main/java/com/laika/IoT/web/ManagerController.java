@@ -6,10 +6,7 @@ import com.laika.IoT.exception.errors.LoginFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.provider.service.ManagerService;
-import com.laika.IoT.web.dto.CommonResponse;
-import com.laika.IoT.web.dto.RequestManger;
-import com.laika.IoT.web.dto.ResponseHome;
-import com.laika.IoT.web.dto.ResponseManager;
+import com.laika.IoT.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -67,14 +64,14 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping("/manager/register/home")
-    public ResponseEntity<CommonResponse> registerHome(@RequestBody String address, HttpServletRequest request) {
+    public ResponseEntity<CommonResponse> registerHome(@Valid @RequestBody RequestHome.Register registerDto, HttpServletRequest request) {
         Optional<String> token = jwtAuthTokenProvider.resolveToken(request);
         String email = null;
         if(token.isPresent()) {
             JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
             email = jwtAuthToken.getData().getSubject();
         }
-        managerService.registerHome(email, address);
+        managerService.registerHome(email, registerDto.getAddress());
         CommonResponse response = CommonResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("성공")
