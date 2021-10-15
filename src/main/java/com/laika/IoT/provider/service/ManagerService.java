@@ -13,14 +13,19 @@ import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.util.SHA256Util;
 import com.laika.IoT.web.dto.RequestManger;
+import com.laika.IoT.web.dto.ResponseHome;
 import com.laika.IoT.web.dto.ResponseManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -130,6 +135,17 @@ public class ManagerService implements ManagerServiceInterface {
         // 집을 등록한다.
         home = homeRepository.save(home);
         manager.addHome(home);
+    }
+
+    @Transactional
+    @Override
+    public Page<ResponseHome.MyHome> list(String email){
+        //매니저 엔티티
+        Manager manager = managerRepository.findByEmail(email);
+        PageRequest pageRequest = PageRequest.of(0,5);
+        //해당 매니저의 홈 리스트 꺼내기
+        Page<Home> homes = homeRepository.findByManager(manager, pageRequest);
+        return homes.map(ResponseHome.MyHome::of);
     }
 
     @Override
