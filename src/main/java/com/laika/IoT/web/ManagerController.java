@@ -2,6 +2,8 @@ package com.laika.IoT.web;
 
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
+import com.laika.IoT.provider.security.JwtAuthToken;
+import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.provider.service.ManagerService;
 import com.laika.IoT.web.dto.CommonResponse;
 import com.laika.IoT.web.dto.RequestManger;
@@ -11,15 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
 @RequiredArgsConstructor
 public class ManagerController {
     private final ManagerService managerService;
+    private final JwtAuthTokenProvider jwtAuthTokenProvider;
 
     @PostMapping("/manager/register")
     public ResponseEntity<CommonResponse> requestRegister(@Valid @RequestBody RequestManger.Register registerDto) {
@@ -60,9 +65,27 @@ public class ManagerController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PostMapping("/manager/register/home")
+    public ResponseEntity<CommonResponse> registerHome(@RequestBody String address, HttpServletRequest request) {
+
+        Optional<String> token = jwtAuthTokenProvider.resolveToken(request);
+        String email = null;
+        if(token.isPresent()) {
+            JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
+            email = jwtAuthToken.getData().getSubject();
+        }
+
+        managerService.registerHome(email,address);
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/dev/test")
-    public ResponseEntity<CommonResponse> requestTest(@RequestParam double val) {
+    public ResponseEntity<CommonResponse> requestTest(@RequestParam Double val) {
         System.out.println("들어왔다" + val);
         CommonResponse response = CommonResponse.builder()
                 .status(HttpStatus.OK.value())

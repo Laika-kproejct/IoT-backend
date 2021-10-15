@@ -2,12 +2,14 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.ManagerServiceInterface;
+import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
+import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.util.SHA256Util;
 import com.laika.IoT.web.dto.RequestManger;
@@ -26,6 +28,7 @@ import java.util.Optional;
 public class ManagerService implements ManagerServiceInterface {
     private final ManagerRepository managerRepository;
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
+    private final HomeRepository homeRepository;
 
     @Transactional
     @Override
@@ -109,6 +112,26 @@ public class ManagerService implements ManagerServiceInterface {
                 .refreshToken(token)
                 .build();
         return Optional.ofNullable(newToken);
+    }
+    @Transactional
+    @Override
+    public void registerHome(String managerEmail,String address){
+        //현재 로그인 매니저 꺼내기
+            Manager manager = managerRepository.findByEmail(managerEmail);
+            if(manager==null){
+                throw new CustomJwtRuntimeException();
+            }
+            Home home = Home.builder()
+                    .address(address)
+                    .manager(manager)
+                    .build();
+
+            home = homeRepository.save(home);
+            manager.addHome(home);
+
+        //홈을 매니저에 등록
+
+
     }
 
     @Override

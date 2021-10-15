@@ -38,6 +38,9 @@ public class Manager {
         this.password = password;
         this.salt = salt;
     }
+    public void addHome(Home home) {
+        this.homes.add(home);
+    }
 
     public void changeRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
