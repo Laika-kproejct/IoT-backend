@@ -1,6 +1,10 @@
 package com.laika.IoT.provider.service;
 
+import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.Manager;
+import com.laika.IoT.provider.security.JwtAuthToken;
+import com.laika.IoT.provider.security.JwtAuthTokenProvider;
+import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.web.dto.RequestManger;
 import com.laika.IoT.web.dto.ResponseManager;
@@ -10,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,9 +27,12 @@ public class ManagerServiceTests {
     private ManagerService managerService;
     @Autowired
     private ManagerRepository managerRepository;
+    @Autowired
+    private HomeRepository homeRepository;
 
     @Test
     @DisplayName("회원가입 서비스 테스트")
+    @Transactional
     void registerTest() {
         //given
         RequestManger.Register dto = RequestManger.Register.builder()
@@ -88,5 +97,30 @@ public class ManagerServiceTests {
         assertNotNull(tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getAccessToken());
         System.out.println(tokenResponse.getRefreshToken());
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("집 등록 서비스 테스트")
+    void registerHomeTest() {
+        //given
+        String address = "경기도 용인시";
+        RequestManger.Register dto = RequestManger.Register.builder()
+                .email("hello")
+                .password("itsmypassword")
+                .build();
+        managerService.register(dto);
+
+        //when
+        Manager manager = managerRepository.findByEmail(dto.getEmail());
+        managerService.registerHome(manager.getEmail(), address);
+        Home home = homeRepository.findByAddress(address);
+        //then
+        assertNotNull(home);
+        assertEquals(home.getAddress(), address);
+        assertEquals(home.getManager().getHomes().get(0).getAddress(), home.getAddress());
+        System.out.println(home.getAddress());
+        System.out.println(home.getManager().getEmail());
+        System.out.println(home.getManager().getId());
     }
 }
