@@ -33,6 +33,7 @@ public class Manager {
     @OneToMany(mappedBy = "manager")
     private List<Home> homes = new ArrayList<>();
 
+
     @Builder
     public Manager(String email, String password, String salt) {
         this.email = email;
