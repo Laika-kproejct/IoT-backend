@@ -32,6 +32,9 @@ public class Manager {
     @OneToMany(mappedBy = "manager")
     private List<Home> homes;
 
+    void addHome(Home home) {
+        this.homes.add(home);
+    }
     @Builder
     public Manager(String email, String password, String salt) {
         this.email = email;

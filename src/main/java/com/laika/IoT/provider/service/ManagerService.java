@@ -2,6 +2,7 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.ManagerServiceInterface;
+import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
@@ -125,4 +126,5 @@ public class ManagerService implements ManagerServiceInterface {
         JwtAuthToken refreshToken = jwtAuthTokenProvider.createAuthToken(id, Role.ADMIN.getCode(), expiredDate);  //토큰 발급
         return refreshToken.getToken();
     }
+
 }

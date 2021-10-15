@@ -18,12 +18,20 @@ public class Home {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name="address")
+    private String address;
+
     @OneToMany(mappedBy = "home")
     private List<IoTSensor> sensors = new ArrayList<IoTSensor>();
 
     @OneToMany(mappedBy = "home")
     private List<Person> personList = new ArrayList<>();
 
+    @Builder
+    public Home(String address, Manager manager){
+        this.address = address;
+        this.manager = manager;
+    }
     @ManyToOne(targetEntity = Manager.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Manager manager;

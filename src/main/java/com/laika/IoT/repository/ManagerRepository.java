@@ -9,4 +9,5 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Manager findByEmail(String email);
     Manager findByEmailAndPassword(String email, String password);
     Manager findByRefreshToken(String refreshToken);
+
 }
