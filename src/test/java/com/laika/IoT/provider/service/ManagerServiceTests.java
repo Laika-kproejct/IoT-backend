@@ -7,11 +7,14 @@ import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.web.dto.RequestManger;
+import com.laika.IoT.web.dto.ResponseHome;
 import com.laika.IoT.web.dto.ResponseManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -122,5 +125,26 @@ public class ManagerServiceTests {
         System.out.println(home.getAddress());
         System.out.println(home.getManager().getEmail());
         System.out.println(home.getManager().getId());
+    }
+    @Transactional
+    @Test
+    @DisplayName("집 리스트 테스트")
+    void listHomeTest(){
+        RequestManger.Register dto = RequestManger.Register.builder()
+                .email("hello")
+                .password("itsmypassword")
+                .build();
+        managerService.register(dto);
+        Manager manager = managerRepository.findByEmail(dto.getEmail());
+        managerService.registerHome(manager.getEmail(), "경기도 용인시");
+        managerService.registerHome(manager.getEmail(), "경기도 수원시");
+        managerService.registerHome(manager.getEmail(), "경기도 안양시");
+        managerService.registerHome(manager.getEmail(), "경기도 서울특별시");
+        managerService.registerHome(manager.getEmail(), "경기도 화성시");
+        Page<ResponseHome.MyHome> list = managerService.list(dto.getEmail());
+        assertNotNull(list);
+        for (ResponseHome.MyHome myHome : list) {
+            System.out.println(myHome.getHomeId() + myHome.getAddress());
+        }
     }
 }
