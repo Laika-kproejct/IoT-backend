@@ -139,12 +139,11 @@ public class ManagerService implements ManagerServiceInterface {
 
     @Transactional
     @Override
-    public Page<ResponseHome.MyHome> list(String email){
+    public Page<ResponseHome.MyHome> list(String email, Pageable pageable){
         //매니저 엔티티
         Manager manager = managerRepository.findByEmail(email);
-        PageRequest pageRequest = PageRequest.of(0,5);
         //해당 매니저의 홈 리스트 꺼내기
-        Page<Home> homes = homeRepository.findByManager(manager, pageRequest);
+        Page<Home> homes = homeRepository.findByManager(manager, pageable);
         return homes.map(ResponseHome.MyHome::of);
     }
 
@@ -152,7 +151,6 @@ public class ManagerService implements ManagerServiceInterface {
     public String createAccessToken(String id) {
         Date expiredDate = Date.from(LocalDateTime.now().plusMinutes(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2분만 유지되도록 설정, 2분 후 refresh token
         JwtAuthToken accessToken = jwtAuthTokenProvider.createAuthToken(id, Role.ADMIN.getCode(), expiredDate);  //토큰 발급
-
         return accessToken.getToken();
     }
 

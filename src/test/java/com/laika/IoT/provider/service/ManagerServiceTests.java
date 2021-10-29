@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -136,12 +137,14 @@ public class ManagerServiceTests {
                 .build();
         managerService.register(dto);
         Manager manager = managerRepository.findByEmail(dto.getEmail());
+
         managerService.registerHome(manager.getEmail(), "경기도 용인시");
         managerService.registerHome(manager.getEmail(), "경기도 수원시");
         managerService.registerHome(manager.getEmail(), "경기도 안양시");
         managerService.registerHome(manager.getEmail(), "경기도 서울특별시");
         managerService.registerHome(manager.getEmail(), "경기도 화성시");
-        Page<ResponseHome.MyHome> list = managerService.list(dto.getEmail());
+        Pageable pageable = PageRequest.of(0,5);
+        Page<ResponseHome.MyHome> list = managerService.list(dto.getEmail(),pageable);
         assertNotNull(list);
         for (ResponseHome.MyHome myHome : list) {
             System.out.println(myHome.getHomeId() + myHome.getAddress());
