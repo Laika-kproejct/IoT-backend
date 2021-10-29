@@ -9,6 +9,8 @@ import com.laika.IoT.provider.service.ManagerService;
 import com.laika.IoT.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,14 +81,14 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/manager/list/home")
-    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request){
+    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request,@PageableDefault Pageable pageable){
         Optional<String> token = jwtAuthTokenProvider.resolveToken(request);
         String email = null;
         if(token.isPresent()) {
             JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token.get());
             email = jwtAuthToken.getData().getSubject();
         }
-        Page<ResponseHome.MyHome> homes = managerService.list(email);
+        Page<ResponseHome.MyHome> homes = managerService.list(email, pageable);
         CommonResponse response = CommonResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message("성공")
@@ -94,6 +96,11 @@ public class ManagerController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+//    @GetMapping("/manager/list/home/sensor")
+//    public ResponseEntity<CommonResponse> listSensor(HttpServletRequest request){
+//
+//    }
 
     @GetMapping("/dev/test")
     public ResponseEntity<CommonResponse> requestTest(@RequestParam double val) {
