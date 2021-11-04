@@ -5,6 +5,7 @@ import com.laika.IoT.core.service.SensorServiceInterface;
 import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.exception.errors.NotFoundSensorException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -60,7 +61,16 @@ public class SensorService implements SensorServiceInterface {
                 .build();
         return Optional.ofNullable(responseIoTSensor);
     }
-    public Optional<RequestIoTSensor.Update> update(String token){
-
+    @Transactional
+    @Override
+    public void update(String token) {
+        //토큰으로 센서 검색
+        IoTSensor sensor = ioTSensorRepository.findByToken(token);
+        //실패시 예외 발생 처리
+        if(sensor == null){
+            throw new NotFoundSensorException();
+        }
+        //해당 센서 타임스탬프 업데이트
+        sensor.UpdateTimestamp(new Date());
     }
 }

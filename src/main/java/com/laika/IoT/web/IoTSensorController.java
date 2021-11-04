@@ -35,7 +35,13 @@ public class IoTSensorController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/sensor/update")
-    public ResponseEntity<CommonResponse> registerSensor(@Valid RequestIoTSensor.Update updateDto) {
-        RequestIoTSensor.Update updateDto = sensorService.
+    public ResponseEntity<CommonResponse> updateSensor(@Valid RequestIoTSensor.Update updateDto) {
+        sensorService.update(updateDto.getToken());
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("업데이트 성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
