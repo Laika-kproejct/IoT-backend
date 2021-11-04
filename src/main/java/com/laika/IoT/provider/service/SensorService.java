@@ -71,6 +71,9 @@ public class SensorService implements SensorServiceInterface {
             throw new NotFoundSensorException();
         }
         //해당 센서 타임스탬프 업데이트
+        System.out.println(sensor.getTimestamp());
         sensor.UpdateTimestamp(new Date());
+        System.out.println(sensor.getTimestamp());
+
     }
 }
