@@ -1,5 +1,6 @@
 package com.laika.IoT.provider.service;
 
+import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
@@ -34,8 +35,10 @@ public class SensorServiceTests {
         //센서 등록
         RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
                 .homeId(home.getId())
+                .token("aaaa")
+                .type(SensorType.HUMAN_DETECTION)
                 .build();
-        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(registerDto.getHomeId(), registerDto.getToken()).orElseGet(()->null);
+        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
 
         //검증
         assertNotNull(responseIoTSensor);

@@ -1,6 +1,7 @@
 package com.laika.IoT.provider.service;
 
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -8,10 +9,12 @@ import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.web.dto.RequestManger;
 import com.laika.IoT.web.dto.ResponseHome;
+import com.laika.IoT.web.dto.ResponseIoTSensor;
 import com.laika.IoT.web.dto.ResponseManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -148,6 +151,35 @@ public class ManagerServiceTests {
         assertNotNull(list);
         for (ResponseHome.MyHome myHome : list) {
             System.out.println(myHome.getHomeId() + myHome.getAddress());
+        }
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("센서 리스트 테스트")
+    void listSensorTest(){
+        RequestManger.Register dto = RequestManger.Register.builder()
+                .email("hello")
+                .password("itsmypassword")
+                .build();
+        managerService.register(dto);
+        Manager manager = managerRepository.findByEmail(dto.getEmail());
+        Pageable pageable = PageRequest.of(0,3);
+
+        managerService.registerHome(manager.getEmail(), "경기도 용인시");
+        Home home = homeRepository.findByAddress("경기도 용인시");
+        System.out.println(home.getAddress());
+        IoTSensor ioTSensor = IoTSensor.builder()
+                .token("1234567")
+                .home(home)
+                .build();
+        System.out.println(ioTSensor.getToken());
+        Page<ResponseIoTSensor.MySensor> sensorlist = managerService.sensorlist(dto.getEmail(),pageable);
+        assertNotNull(sensorlist);
+        System.out.println("총 개수 : " + sensorlist.getTotalElements());
+        for(ResponseIoTSensor.MySensor sensor : sensorlist){
+            System.out.println("결과:");
+            System.out.println(sensor.getSensorid() + sensor.getToken() + sensor.getTimestamp().getTime());
         }
     }
 }

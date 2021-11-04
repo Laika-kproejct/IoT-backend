@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface HomeRepository extends JpaRepository<Home, Long> {
     Home findByAddress(String address);
+    Home findByManagerAndAddress(Manager manager, String address);
     Page<Home> findByManager(Manager manager, Pageable pageable);
 }
