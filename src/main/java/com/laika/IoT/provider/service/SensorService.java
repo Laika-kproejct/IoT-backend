@@ -9,6 +9,7 @@ import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
+import com.laika.IoT.web.dto.RequestIoTSensor;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,5 +57,8 @@ public class SensorService implements SensorServiceInterface {
                 .registeredToken(newSensor.getToken())
                 .build();
         return Optional.ofNullable(responseIoTSensor);
+    }
+    public Optional<RequestIoTSensor.Update> update(String token){
+
     }
 }
