@@ -2,6 +2,7 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.SensorServiceInterface;
+import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
@@ -28,7 +29,7 @@ public class SensorService implements SensorServiceInterface {
 
     @Transactional
     @Override
-    public Optional<ResponseIoTSensor.Register> register(Long recipientId, String token) {
+    public Optional<ResponseIoTSensor.Register> register(Long recipientId, String token, SensorType type) {
         //관리대상자 존재여부 확인
         Home home = homeRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
         //
@@ -48,6 +49,7 @@ public class SensorService implements SensorServiceInterface {
         IoTSensor newSensor = IoTSensor.builder()
                 .token(newToken)
                 .home(home)
+                .type(type)
                 .build();
         newSensor = ioTSensorRepository.save(newSensor);
         home.addSensor(newSensor);
