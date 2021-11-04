@@ -5,11 +5,13 @@ import com.laika.IoT.core.service.SensorServiceInterface;
 import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.exception.errors.NotFoundSensorException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
+import com.laika.IoT.web.dto.RequestIoTSensor;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,20 @@ public class SensorService implements SensorServiceInterface {
                 .registeredToken(newSensor.getToken())
                 .build();
         return Optional.ofNullable(responseIoTSensor);
+    }
+    @Transactional
+    @Override
+    public void update(String token) {
+        //토큰으로 센서 검색
+        IoTSensor sensor = ioTSensorRepository.findByToken(token);
+        //실패시 예외 발생 처리
+        if(sensor == null){
+            throw new NotFoundSensorException();
+        }
+        //해당 센서 타임스탬프 업데이트
+        System.out.println(sensor.getTimestamp());
+        sensor.UpdateTimestamp(new Date());
+        System.out.println(sensor.getTimestamp());
+
     }
 }

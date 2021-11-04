@@ -2,6 +2,7 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.web.dto.RequestIoTSensor;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,5 +48,32 @@ public class SensorServiceTests {
         assertNotNull(home.getId());
         System.out.println(responseIoTSensor.getRegisteredToken());
         System.out.println(home.getId()+"아이디임");
+    }
+
+    @Test
+    @DisplayName("센서 업데이트")
+    @Transactional
+    void updateSensorTest(){
+        //관리 대상자 생성
+        Home home = new Home();
+        home = homeRepository.save(home);
+        //센서 등록
+        RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
+                .homeId(home.getId())
+                .token("aaaa")
+                .type(SensorType.HUMAN_DETECTION)
+                .build();
+        sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
+        IoTSensor sensor = ioTSensorRepository.findByToken(registerDto.getToken());
+
+        System.out.println(sensor.getTimestamp());
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        sensorService.update(sensor.getToken());
+        System.out.println(sensor.getTimestamp());
+
     }
 }

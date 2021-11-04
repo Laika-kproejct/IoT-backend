@@ -10,6 +10,7 @@ import com.laika.IoT.web.dto.ResponseManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,16 @@ public class IoTSensorController {
                 .status(HttpStatus.OK.value())
                 .message("등록 성공")
                 .list(responseDto)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/sensor/update")
+    public ResponseEntity<CommonResponse> updateSensor(@Valid RequestIoTSensor.Update updateDto) {
+        sensorService.update(updateDto.getToken());
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("업데이트 성공")
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
