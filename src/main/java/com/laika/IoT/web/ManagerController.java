@@ -81,7 +81,7 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/manager/list/home")
-    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request,@PageableDefault Pageable pageable){
+    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request, @PageableDefault Pageable pageable){
         Optional<String> token = jwtAuthTokenProvider.resolveToken(request);
         String email = null;
         if(token.isPresent()) {
@@ -96,11 +96,6 @@ public class ManagerController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-//    @GetMapping("/manager/list/home/sensor")
-//    public ResponseEntity<CommonResponse> listSensor(HttpServletRequest request){
-//
-//    }
 
     @GetMapping("/dev/test")
     public ResponseEntity<CommonResponse> requestTest(@RequestParam double val) {

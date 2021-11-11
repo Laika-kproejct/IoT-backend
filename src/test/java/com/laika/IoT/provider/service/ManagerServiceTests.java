@@ -1,6 +1,7 @@
 package com.laika.IoT.provider.service;
 
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -8,10 +9,12 @@ import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.web.dto.RequestManger;
 import com.laika.IoT.web.dto.ResponseHome;
+import com.laika.IoT.web.dto.ResponseIoTSensor;
 import com.laika.IoT.web.dto.ResponseManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -150,4 +153,5 @@ public class ManagerServiceTests {
             System.out.println(myHome.getHomeId() + myHome.getAddress());
         }
     }
+
 }

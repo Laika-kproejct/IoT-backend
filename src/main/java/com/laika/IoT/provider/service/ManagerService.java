@@ -3,17 +3,21 @@ package com.laika.IoT.provider.service;
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.ManagerServiceInterface;
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
+import com.laika.IoT.exception.errors.NotFoundHomeException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.HomeRepository;
+import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.util.SHA256Util;
 import com.laika.IoT.web.dto.RequestManger;
 import com.laika.IoT.web.dto.ResponseHome;
+import com.laika.IoT.web.dto.ResponseIoTSensor;
 import com.laika.IoT.web.dto.ResponseManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +38,7 @@ public class ManagerService implements ManagerServiceInterface {
     private final ManagerRepository managerRepository;
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
     private final HomeRepository homeRepository;
+    private  final IoTSensorRepository ioTSensorRepository;
 
     @Transactional
     @Override
@@ -146,6 +151,8 @@ public class ManagerService implements ManagerServiceInterface {
         Page<Home> homes = homeRepository.findByManager(manager, pageable);
         return homes.map(ResponseHome.MyHome::of);
     }
+
+
 
     @Override
     public String createAccessToken(String id) {
