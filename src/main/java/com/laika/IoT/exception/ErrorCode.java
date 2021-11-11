@@ -15,7 +15,9 @@ public enum ErrorCode {
     REQUEST_PARAMETER_BIND_FAILED(HttpStatus.BAD_REQUEST, "REQ_001", "PARAMETER_BIND_FAILED"),
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH004", "INVALID_JWT_TOKEN."),
     REGISTER_SENSOR_FAILED(HttpStatus.FORBIDDEN, "SENSOR_001", "센서 등록 실패, 토큰 중복 여부, 관리대상자 존재 여부 확인"),
-    NOT_FOUND_HOME(HttpStatus.NOT_FOUND,"HOME_000","집을 못 찾았습니다.");
+    NOT_FOUND_HOME(HttpStatus.NOT_FOUND,"HOME_000","집을 못 찾았습니다."),
+    NOT_FOUND_SENSOR(HttpStatus.NOT_FOUND,"SENSOR_001","센서를 찾지 못했습니다");
+
 
     private final String code;
     private final String message;

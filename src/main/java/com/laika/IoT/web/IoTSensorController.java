@@ -16,7 +16,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
@@ -52,6 +51,16 @@ public class IoTSensorController {
                 .status(HttpStatus.OK.value())
                 .message("성공")
                 .list(sensors)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/sensor/update")
+    public ResponseEntity<CommonResponse> updateSensor(@Valid RequestIoTSensor.Update updateDto) {
+        sensorService.update(updateDto.getToken());
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("업데이트 성공")
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

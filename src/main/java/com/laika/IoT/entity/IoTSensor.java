@@ -39,4 +39,7 @@ public class IoTSensor {
         this.home = home;
         this.type = type;
     }
+    public void UpdateTimestamp(Date timestamp){
+        this.timestamp = timestamp;
+    }
 }

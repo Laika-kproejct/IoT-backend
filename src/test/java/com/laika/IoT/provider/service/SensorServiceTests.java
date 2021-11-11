@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -63,14 +65,14 @@ public class SensorServiceTests {
     @Transactional
     @Test
     @DisplayName("센서 리스트 테스트")
-    void listSensorTest(){
+    void listSensorTest() {
         RequestManger.Register dto = RequestManger.Register.builder()
                 .email("hello")
                 .password("itsmypassword")
                 .build();
         managerService.register(dto);
         Manager manager = managerRepository.findByEmail(dto.getEmail());
-        Pageable pageable = PageRequest.of(0,3);
+        Pageable pageable = PageRequest.of(0, 3);
 
         managerService.registerHome(manager.getEmail(), "경기도 용인시");
         Home home = homeRepository.findByAddress("경기도 용인시");
@@ -82,12 +84,39 @@ public class SensorServiceTests {
         sensorService.register(home.getId(), "123125", SensorType.HUMAN_DETECTION);
 
         System.out.println("home id : " + home.getId());
-        Page<ResponseIoTSensor.MySensor> sensorlist = sensorService.sensorlist(home.getId(),pageable);
+        Page<ResponseIoTSensor.MySensor> sensorlist = sensorService.sensorlist(home.getId(), pageable);
         System.out.println("총 개수 : " + sensorlist.getTotalElements());
         assertNotNull(sensorlist);
-        for(ResponseIoTSensor.MySensor sensor : sensorlist){
+        for (ResponseIoTSensor.MySensor sensor : sensorlist) {
             System.out.println("결과:");
             System.out.println(sensor.getSensorid() + sensor.getToken() + " " + sensor.getTimestamp());
         }
+    }
+
+    @Test
+    @DisplayName("센서 업데이트")
+    @Transactional
+    void updateSensorTest(){
+        //관리 대상자 생성
+        Home home = new Home();
+        home = homeRepository.save(home);
+        //센서 등록
+        RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
+                .homeId(home.getId())
+                .token("aaaa")
+                .type(SensorType.HUMAN_DETECTION)
+                .build();
+        sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
+        IoTSensor sensor = ioTSensorRepository.findByToken(registerDto.getToken());
+
+        System.out.println(sensor.getTimestamp());
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        sensorService.update(sensor.getToken());
+        System.out.println(sensor.getTimestamp());
+
     }
 }
