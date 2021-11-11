@@ -5,6 +5,7 @@ import com.laika.IoT.core.service.SensorServiceInterface;
 import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Home;
+import com.laika.IoT.exception.errors.NotFoundHomeException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -12,6 +13,8 @@ import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,5 +61,15 @@ public class SensorService implements SensorServiceInterface {
                 .registeredToken(newSensor.getToken())
                 .build();
         return Optional.ofNullable(responseIoTSensor);
+    }
+
+    @Transactional
+    @Override
+    public Page<ResponseIoTSensor.MySensor> sensorlist(Long homeId, Pageable pageable){
+        // 홈
+        Home home = homeRepository.findById(homeId).orElseThrow(()->new NotFoundHomeException());
+        //센서
+        Page<IoTSensor> sensors = ioTSensorRepository.findByHome(home, pageable);
+        return sensors.map(ResponseIoTSensor.MySensor::of);
     }
 }

@@ -1,10 +1,7 @@
 package com.laika.IoT.exception;
 
 
-import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
-import com.laika.IoT.exception.errors.LoginFailedException;
-import com.laika.IoT.exception.errors.RegisterFailedException;
-import com.laika.IoT.exception.errors.RegisterSensorFailedException;
+import com.laika.IoT.exception.errors.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -107,5 +104,17 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, ErrorCode.REGISTER_SENSOR_FAILED.getStatus());
+    }
+
+    @ExceptionHandler(NotFoundHomeException.class)
+    protected ResponseEntity<ErrorResponse> handleNotFoundHomeException(NotFoundHomeException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.NOT_FOUND_HOME.getCode())
+                .message(ErrorCode.NOT_FOUND_HOME.getMessage())
+                .status(ErrorCode.NOT_FOUND_HOME.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.NOT_FOUND_HOME.getStatus());
     }
 }

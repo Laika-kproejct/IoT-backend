@@ -154,32 +154,4 @@ public class ManagerServiceTests {
         }
     }
 
-    @Transactional
-    @Test
-    @DisplayName("센서 리스트 테스트")
-    void listSensorTest(){
-        RequestManger.Register dto = RequestManger.Register.builder()
-                .email("hello")
-                .password("itsmypassword")
-                .build();
-        managerService.register(dto);
-        Manager manager = managerRepository.findByEmail(dto.getEmail());
-        Pageable pageable = PageRequest.of(0,3);
-
-        managerService.registerHome(manager.getEmail(), "경기도 용인시");
-        Home home = homeRepository.findByAddress("경기도 용인시");
-        System.out.println(home.getAddress());
-        IoTSensor ioTSensor = IoTSensor.builder()
-                .token("1234567")
-                .home(home)
-                .build();
-        System.out.println(ioTSensor.getToken());
-        Page<ResponseIoTSensor.MySensor> sensorlist = managerService.sensorlist(dto.getEmail(),pageable);
-        assertNotNull(sensorlist);
-        System.out.println("총 개수 : " + sensorlist.getTotalElements());
-        for(ResponseIoTSensor.MySensor sensor : sensorlist){
-            System.out.println("결과:");
-            System.out.println(sensor.getSensorid() + sensor.getToken() + sensor.getTimestamp().getTime());
-        }
-    }
 }

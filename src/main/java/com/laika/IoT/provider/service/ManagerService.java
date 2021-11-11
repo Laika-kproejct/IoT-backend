@@ -7,6 +7,7 @@ import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Manager;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.LoginFailedException;
+import com.laika.IoT.exception.errors.NotFoundHomeException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
@@ -151,20 +152,7 @@ public class ManagerService implements ManagerServiceInterface {
         return homes.map(ResponseHome.MyHome::of);
     }
 
-    @Transactional
-    @Override
-    public Page<ResponseIoTSensor.MySensor> sensorlist(String email, Pageable pageable){
-        //매니저 엔티티
-        Manager manager = managerRepository.findByEmail(email);
-        // 홈
-        List<Home> homes = homeRepository.findByManagerAndAddress(manager, );
-        //센서
-        Page<IoTSensor> sensors;
-        for(Home home : homes){
-            sensors = ioTSensorRepository.findByHome(home, pageable);
-        }
-       return sensors.map(ResponseIoTSensor.MySensor::of);
-    }
+
 
     @Override
     public String createAccessToken(String id) {
