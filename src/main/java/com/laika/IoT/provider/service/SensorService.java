@@ -36,9 +36,9 @@ public class SensorService implements SensorServiceInterface {
         Home home = homeRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
         //
         String newToken = token;
-        if(newToken == null) {
-            //토큰이 없으므로 발급해주기
-            Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
+            if(newToken == null) {
+                //토큰이 없으므로 발급해주기
+               Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
             JwtAuthToken accessToken = jwtAuthTokenProvider.createAuthToken(String.valueOf(recipientId), Role.ADMIN.getCode(), expiredDate);  //토큰 발급
             newToken = accessToken.getToken();
         }
