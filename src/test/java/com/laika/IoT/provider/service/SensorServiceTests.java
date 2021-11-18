@@ -1,5 +1,6 @@
 package com.laika.IoT.provider.service;
 
+import com.laika.IoT.configuration.QuartzConfig;
 import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.IoTSensor;
@@ -20,6 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +43,9 @@ public class SensorServiceTests {
     private ManagerService managerService;
     @Autowired
     private ManagerRepository managerRepository;
-    //
+
+    @Autowired
+    private QuartzConfig quartzConfig;
 
     @Test
     @DisplayName("센서 등록 테스트")
@@ -118,5 +124,52 @@ public class SensorServiceTests {
         sensorService.update(sensor.getToken());
         System.out.println(sensor.getTimestamp());
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("센서 최신 업데이트 시간 체크 테스트")
+    void checkTest(){
+        //관리 대상자 생성
+        RequestManger.Register registerManager = RequestManger.Register.builder()
+                .email("111")
+                .password("111")
+                .build();
+        managerService.register(registerManager);
+        Manager manager = managerRepository.findByEmail(registerManager.getEmail());
+        Home home = Home.builder()
+                .address("용인")
+                .manager(manager)
+                .build();
+        home = homeRepository.save(home);
+        Home home1 = Home.builder()
+                .address("안양")
+                .manager(manager)
+                .build();
+        home1 = homeRepository.save(home1);
+        //센서 등록
+        RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
+                .homeId(home.getId())
+                .token("aaaa1")
+                .type(SensorType.HUMAN_DETECTION)
+                .build();
+        RequestIoTSensor.Register registerDto1 = RequestIoTSensor.Register.builder()
+                .homeId(home1.getId())
+                .token("aaaa2")
+                .type(SensorType.HUMAN_DETECTION)
+                .build();
+        sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
+        sensorService.register(registerDto1.getHomeId(), registerDto1.getToken(), registerDto1.getType()).orElseGet(()->null);
+        //센서 마지막 업데이트 시간 임의 설정
+        IoTSensor sensor1 = ioTSensorRepository.findByToken(registerDto.getToken());
+        IoTSensor sensor2 = ioTSensorRepository.findByToken(registerDto1.getToken());
+        LocalDateTime testTime1 = LocalDateTime.of(2021,11,18,19,38,30);
+        LocalDateTime testTime2 = LocalDateTime.of(2021,11,17,15,38,30);
+        Date testDate = Date.from(testTime1.atZone(ZoneId.systemDefault()).toInstant());
+        Date testDate2 = Date.from(testTime2.atZone(ZoneId.systemDefault()).toInstant());
+        sensor1.UpdateTimestamp(testDate);
+        sensor2.UpdateTimestamp(testDate2);
+
+        sensorService.check(LocalDateTime.now());
     }
 }
