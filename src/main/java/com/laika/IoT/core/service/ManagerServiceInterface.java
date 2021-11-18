@@ -17,6 +17,7 @@ public interface ManagerServiceInterface {
     Optional<ResponseManager.Token> refreshToken(String token);
     void registerHome(String managerEmail, String address);
     Page<ResponseHome.MyHome> list(String email, Pageable pageable);
+    void refreshFcmToken(String managerEmail, String token);
     String createAccessToken(String id);
     String createRefreshToken(String id);
 }

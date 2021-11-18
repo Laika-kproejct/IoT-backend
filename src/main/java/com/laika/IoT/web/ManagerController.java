@@ -97,6 +97,21 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/manager/fcm/refresh")
+    public ResponseEntity<CommonResponse> fcmRefresh(HttpServletRequest request, @RequestBody RequestManger.RefreshFirebase requestDto){
+        String token = jwtAuthTokenProvider.resolveToken(request).orElseThrow(()->new CustomJwtRuntimeException());
+        JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token);
+        String email = jwtAuthToken.getData().getSubject();
+
+        managerService.refreshFcmToken(email, requestDto.getToken());
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/dev/test")
     public ResponseEntity<CommonResponse> requestTest(@RequestParam double val) {
         System.out.println("들어왔다" + val);

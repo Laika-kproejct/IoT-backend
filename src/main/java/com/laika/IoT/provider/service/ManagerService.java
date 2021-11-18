@@ -2,6 +2,7 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.ManagerServiceInterface;
+import com.laika.IoT.entity.FirebaseToken;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Manager;
@@ -11,6 +12,7 @@ import com.laika.IoT.exception.errors.NotFoundHomeException;
 import com.laika.IoT.exception.errors.RegisterFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
+import com.laika.IoT.repository.FirebaseTokenRepository;
 import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.ManagerRepository;
@@ -38,7 +40,8 @@ public class ManagerService implements ManagerServiceInterface {
     private final ManagerRepository managerRepository;
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
     private final HomeRepository homeRepository;
-    private  final IoTSensorRepository ioTSensorRepository;
+    private final IoTSensorRepository ioTSensorRepository;
+    private final FirebaseTokenRepository firebaseTokenRepository;
 
     @Transactional
     @Override
@@ -152,6 +155,26 @@ public class ManagerService implements ManagerServiceInterface {
         return homes.map(ResponseHome.MyHome::of);
     }
 
+    @Transactional
+    @Override
+    public void refreshFcmToken(String managerEmail, String token) {
+        // 이메일로 매니저를 꺼낸다
+        Manager manager = managerRepository.findByEmail(managerEmail);
+        if(manager == null) throw new CustomJwtRuntimeException();
+        // fcm token 으로 등록된 토큰이 있는지 찾는다.
+        FirebaseToken firebaseToken = firebaseTokenRepository.findByToken(token);
+        //이미 등록된 토큰이면 date update
+        if(firebaseToken != null) {
+            firebaseToken.updateDate();
+        } else {
+            //등록되지 않은 토큰이면 새로 등록
+            FirebaseToken newToken = FirebaseToken.builder()
+                    .manager(manager)
+                    .token(token)
+                    .build();
+            firebaseTokenRepository.save(newToken);
+        }
+    }
 
 
     @Override
