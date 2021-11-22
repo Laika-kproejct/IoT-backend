@@ -23,6 +23,9 @@ public class Home {
     @Column(name="address")
     private String address;
 
+    @Column(name="isNotEmpty", nullable = false)
+    private boolean isNotEmpty = false;
+
     @OneToMany(mappedBy = "home")
     private List<IoTSensor> sensors = new ArrayList<IoTSensor>();
 
