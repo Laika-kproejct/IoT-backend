@@ -29,5 +29,6 @@ public class RequestIoTSensor {
     public static class Update{
         @NotNull(message = "토큰을 발급 해주세요")
         private String token;
+        private String status;
     }
 }

@@ -105,6 +105,19 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, ErrorCode.REGISTER_SENSOR_FAILED.getStatus());
     }
+
+    @ExceptionHandler(NotFoundHomeException.class)
+    protected ResponseEntity<ErrorResponse> handleNotFoundHomeException(NotFoundHomeException e) {
+
+        ErrorResponse response = ErrorResponse.builder()
+                .code(ErrorCode.NOT_FOUND_HOME.getCode())
+                .message(ErrorCode.NOT_FOUND_HOME.getMessage())
+                .status(ErrorCode.NOT_FOUND_HOME.getStatus().value())
+                .build();
+
+        return new ResponseEntity<>(response, ErrorCode.NOT_FOUND_HOME.getStatus());
+    }
+
     @ExceptionHandler(NotFoundSensorException.class)
     protected ResponseEntity<ErrorResponse> handleNotFoundSensorException(NotFoundSensorException e) {
 

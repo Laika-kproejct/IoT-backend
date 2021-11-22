@@ -31,6 +31,9 @@ public class Manager {
     private String refreshToken;
 
     @OneToMany(mappedBy = "manager")
+    private List<FirebaseToken> tokens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager")
     private List<Home> homes = new ArrayList<>();
 
 

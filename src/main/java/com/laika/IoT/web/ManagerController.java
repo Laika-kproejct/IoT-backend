@@ -81,7 +81,7 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/manager/list/home")
-    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request,@PageableDefault Pageable pageable){
+    public ResponseEntity<CommonResponse> listHome(HttpServletRequest request, @PageableDefault Pageable pageable){
         Optional<String> token = jwtAuthTokenProvider.resolveToken(request);
         String email = null;
         if(token.isPresent()) {
@@ -97,10 +97,20 @@ public class ManagerController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-//    @GetMapping("/manager/list/home/sensor")
-//    public ResponseEntity<CommonResponse> listSensor(HttpServletRequest request){
-//
-//    }
+    @PostMapping("/manager/fcm/refresh")
+    public ResponseEntity<CommonResponse> fcmRefresh(HttpServletRequest request, @RequestBody RequestManger.RefreshFirebase requestDto){
+        String token = jwtAuthTokenProvider.resolveToken(request).orElseThrow(()->new CustomJwtRuntimeException());
+        JwtAuthToken jwtAuthToken = jwtAuthTokenProvider.convertAuthToken(token);
+        String email = jwtAuthToken.getData().getSubject();
+
+        managerService.refreshFcmToken(email, requestDto.getToken());
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/dev/test")
     public ResponseEntity<CommonResponse> requestTest(@RequestParam String val) {

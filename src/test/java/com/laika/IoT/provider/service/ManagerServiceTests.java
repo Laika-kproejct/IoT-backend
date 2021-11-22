@@ -2,8 +2,6 @@ package com.laika.IoT.provider.service;
 
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.Manager;
-import com.laika.IoT.provider.security.JwtAuthToken;
-import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.HomeRepository;
 import com.laika.IoT.repository.ManagerRepository;
 import com.laika.IoT.web.dto.RequestManger;
@@ -18,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
