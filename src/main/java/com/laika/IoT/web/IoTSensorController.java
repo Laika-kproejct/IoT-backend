@@ -56,7 +56,12 @@ public class IoTSensorController {
     }
     @GetMapping("/sensor/update")
     public ResponseEntity<CommonResponse> updateSensor(@Valid RequestIoTSensor.Update updateDto) {
-        sensorService.update(updateDto.getToken());
+        if(updateDto.getStatus() == null) {
+            sensorService.update(updateDto.getToken());
+        } else {
+            sensorService.update(updateDto.getToken(),updateDto.getStatus());
+        }
+
 
         CommonResponse response = CommonResponse.builder()
                 .status(HttpStatus.OK.value())

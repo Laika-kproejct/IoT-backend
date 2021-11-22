@@ -47,5 +47,8 @@ public class Home {
     public void addPerson(Person person) {
         this.personList.add(person);
     }
+    public void updateStatus(boolean isNotEmpty){
+        this.isNotEmpty = isNotEmpty;
+    }
 
 }
