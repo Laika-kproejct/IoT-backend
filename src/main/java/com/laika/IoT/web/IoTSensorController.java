@@ -1,5 +1,6 @@
 package com.laika.IoT.web;
 
+import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.service.SensorService;
@@ -10,10 +11,7 @@ import com.laika.IoT.web.dto.ResponseManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -32,6 +30,9 @@ public class IoTSensorController {
                 .message("등록 성공")
                 .list(responseDto)
                 .build();
+        System.out.println("val"+register.getHomeId());
+        System.out.println("token"+register.getToken());
+        System.out.println("type"+register.getType());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/sensor/update")
