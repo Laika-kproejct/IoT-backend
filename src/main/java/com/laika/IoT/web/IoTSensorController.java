@@ -27,8 +27,8 @@ public class IoTSensorController {
     private final SensorService sensorService;
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
 
-    @PostMapping("/sensor/register")
-    public ResponseEntity<CommonResponse> registerSensor(@RequestBody @Valid RequestIoTSensor.Register register) {
+    @GetMapping("/sensor/register")
+    public ResponseEntity<CommonResponse> registerSensor(@Valid RequestIoTSensor.Register register) {
         ResponseIoTSensor.Register responseDto = sensorService.register(register.getHomeId(), register.getToken(), register.getType()).orElseThrow(()-> new RegisterSensorFailedException());
 
         CommonResponse response = CommonResponse.builder()
