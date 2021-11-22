@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
@@ -27,8 +28,8 @@ public class IoTSensorController {
     private final SensorService sensorService;
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
 
-    @PostMapping("/sensor/register")
-    public ResponseEntity<CommonResponse> registerSensor(@RequestBody @Valid RequestIoTSensor.Register register) {
+    @GetMapping("/sensor/register")
+    public ResponseEntity<CommonResponse> registerSensor(@Valid RequestIoTSensor.Register register) {
         ResponseIoTSensor.Register responseDto = sensorService.register(register.getHomeId(), register.getToken(), register.getType()).orElseThrow(()-> new RegisterSensorFailedException());
 
         CommonResponse response = CommonResponse.builder()
