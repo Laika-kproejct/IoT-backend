@@ -98,7 +98,7 @@ public class SensorService implements SensorServiceInterface {
         sensor.UpdateTimestamp(new Date());
         System.out.println(sensor.getTimestamp());
     }
-
+    @Transactional
     @Override
     public void update(String token, String status) {
         //토큰으로 센서 검색
