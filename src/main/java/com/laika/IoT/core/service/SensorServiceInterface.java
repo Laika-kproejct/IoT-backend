@@ -14,5 +14,6 @@ public interface SensorServiceInterface {
     Optional<ResponseIoTSensor.Register> register(Long recipientId, String token, SensorType type);
     Page<ResponseIoTSensor.MySensor> sensorlist(Long homeId, Pageable pageable);
     void update(String token);
+    void update(String token, String status);
     void check(LocalDateTime localDateTime);
 }

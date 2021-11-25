@@ -49,9 +49,9 @@ public class SensorService implements SensorServiceInterface {
         Home home = homeRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
         //
         String newToken = token;
-        if(newToken == null) {
-            //토큰이 없으므로 발급해주기
-            Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
+            if(newToken == null) {
+                //토큰이 없으므로 발급해주기
+               Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
             JwtAuthToken accessToken = jwtAuthTokenProvider.createAuthToken(String.valueOf(recipientId), Role.ADMIN.getCode(), expiredDate);  //토큰 발급
             newToken = accessToken.getToken();
         }
@@ -97,6 +97,27 @@ public class SensorService implements SensorServiceInterface {
         System.out.println(sensor.getTimestamp());
         sensor.UpdateTimestamp(new Date());
         System.out.println(sensor.getTimestamp());
+    }
+
+    @Override
+    public void update(String token, String status) {
+        //토큰으로 센서 검색
+        IoTSensor sensor = ioTSensorRepository.findByToken(token);
+        //실패시 예외 발생 처리
+        if(sensor == null){
+            throw new NotFoundSensorException();
+        }
+        //해당 센서 타임스탬프 업데이트
+        System.out.println(sensor.getTimestamp());
+        sensor.UpdateTimestamp(new Date());
+        System.out.println(sensor.getTimestamp());
+        //홈 인아웃 변경
+        Home home = sensor.getHome();
+
+        if(status.equals("IN")){
+            home.updateStatus(true);
+        }else
+            home.updateStatus(false);
     }
 
     @Transactional
