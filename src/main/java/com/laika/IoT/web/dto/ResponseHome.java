@@ -15,6 +15,7 @@ public class ResponseHome {
         private Long homeId;
         private String address;
         private List<ResponsePerson.Person> personList;
+        private boolean isNotEmpty;
 
         public static MyHome of(Home home) {
             List<ResponsePerson.Person> personListDto = new ArrayList<>();
@@ -26,6 +27,7 @@ public class ResponseHome {
                     .homeId(home.getId())
                     .address(home.getAddress())
                     .personList(personListDto)
+                    .isNotEmpty(home.isNotEmpty())
                     .build();
         }
     }
