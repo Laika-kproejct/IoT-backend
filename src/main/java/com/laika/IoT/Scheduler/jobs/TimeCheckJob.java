@@ -24,5 +24,6 @@ public class TimeCheckJob extends QuartzJobBean {
         log.info("매시간 실행 될 작업 작성 공간");
         LocalDateTime checkDateTime = LocalDateTime.now();
         sensorService.check(checkDateTime);
+        System.out.println("체크했습니다!!");
     }
 }

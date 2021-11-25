@@ -1,5 +1,6 @@
 package com.laika.IoT.web.dto;
 
+import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Person;
@@ -24,12 +25,14 @@ public class ResponseIoTSensor {
         private Long Sensorid;
         private String token;
         private Date timestamp;
+        private SensorType type;
 
         public static ResponseIoTSensor.MySensor of(IoTSensor ioTSensor){
             return MySensor.builder()
                     .Sensorid(ioTSensor.getId())
                     .token(ioTSensor.getToken())
                     .timestamp(ioTSensor.getTimestamp())
+                    .type(ioTSensor.getType())
                     .build();
         }
     }
