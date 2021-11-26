@@ -12,6 +12,8 @@ public class RequestIoTSensor {
 
     @Builder
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Register {
         private String token;
         @NotNull(message = "관리대상 번호를 입력해주세요")

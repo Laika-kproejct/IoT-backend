@@ -113,7 +113,7 @@ public class ManagerController {
     }
 
     @GetMapping("/dev/test")
-    public ResponseEntity<CommonResponse> requestTest(@RequestParam double val) {
+    public ResponseEntity<CommonResponse> requestTest(@RequestParam String val) {
         System.out.println("들어왔다" + val);
         CommonResponse response = CommonResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -121,4 +121,5 @@ public class ManagerController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

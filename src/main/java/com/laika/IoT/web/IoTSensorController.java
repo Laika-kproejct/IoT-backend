@@ -29,6 +29,7 @@ public class IoTSensorController {
 
     @GetMapping("/sensor/register")
     public ResponseEntity<CommonResponse> registerSensor(@Valid RequestIoTSensor.Register register) {
+        System.out.println("들어왔다"+register.getToken());
         ResponseIoTSensor.Register responseDto = sensorService.register(register.getHomeId(), register.getToken(), register.getType()).orElseThrow(()-> new RegisterSensorFailedException());
 
         CommonResponse response = CommonResponse.builder()
