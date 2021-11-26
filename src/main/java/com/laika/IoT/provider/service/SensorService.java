@@ -127,8 +127,11 @@ public class SensorService implements SensorServiceInterface {
         List<Home> warningHomeList = new ArrayList<>();
         //홈 검사
         for (Home home : homeList) {
+            if(!home.isNotEmpty()){
+                //외출 중일 경우
+                continue;
+            }
             List<IoTSensor> sensorList = home.getSensors();
-
             //최신 날짜
             if (!sensorList.isEmpty()) {
                 Date newest = sensorList.get(0).getTimestamp();
