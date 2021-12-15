@@ -141,7 +141,8 @@ public class SensorService implements SensorServiceInterface {
                 System.out.println("아까시간 :::::"+newest.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
                 System.out.println("시간 :::::"+duration.getSeconds());
                 //하루 86400초
-                if (duration.getSeconds() > 86400) {
+                if (duration.getSeconds() > 120) { // 확인용 2분 이상 업데이틍 안된경우
+                //if (duration.getSeconds() > 86400) {
                 //if (duration.getSeconds() > 60) { // 확인용 1분이상 업데이트 안됐을 경우
                     //하루 이상 업데이트가 안됐을 경우
                     warningHomeList.add(home);
