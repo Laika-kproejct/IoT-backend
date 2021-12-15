@@ -36,4 +36,20 @@ public class ResponseIoTSensor {
                     .build();
         }
     }
+
+    @Builder
+    @Data
+    public static class UnregisteredSensor {
+        private String token;
+        private SensorType type;
+        private Date timestamp;
+
+        public static ResponseIoTSensor.UnregisteredSensor of(IoTSensor ioTSensor){
+            return UnregisteredSensor.builder()
+                    .token(ioTSensor.getToken())
+                    .type(ioTSensor.getType())
+                    .timestamp(ioTSensor.getTimestamp())
+                    .build();
+        }
+    }
 }

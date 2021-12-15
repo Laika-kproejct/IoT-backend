@@ -33,13 +33,18 @@ public class IoTSensor {
     @JoinColumn(name = "home_id")
     private Home home;
 
+    @Column(name="registerHome", nullable = false)
+    private boolean registerHome = false;
+
     @Builder
-    public IoTSensor(String token, Home home, SensorType type) {
+    public IoTSensor(String token, SensorType type) {
         this.token = token;
-        this.home = home;
         this.type = type;
     }
     public void UpdateTimestamp(Date timestamp){
         this.timestamp = timestamp;
+    }
+    public void updateRegisterHome(boolean bool) {
+        this.registerHome = bool;
     }
 }

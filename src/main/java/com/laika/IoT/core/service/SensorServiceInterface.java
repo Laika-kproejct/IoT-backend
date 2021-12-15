@@ -16,4 +16,6 @@ public interface SensorServiceInterface {
     void update(String token);
     void update(String token, String status);
     void check(LocalDateTime localDateTime);
+    void registerUnregisteredSensor(String token, SensorType type);
+    Page<ResponseIoTSensor.UnregisteredSensor> getUnregisteredSensorList(Pageable pageable);
 }

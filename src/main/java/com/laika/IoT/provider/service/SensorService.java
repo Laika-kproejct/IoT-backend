@@ -47,32 +47,19 @@ public class SensorService implements SensorServiceInterface {
     public Optional<ResponseIoTSensor.Register> register(Long recipientId, String token, SensorType type) {
         //관리대상자 존재여부 확인
         Home home = homeRepository.findById(recipientId).orElseThrow(()->new RegisterSensorFailedException());
-        //
-        String newToken = token;
-            if(newToken == null) {
-                //토큰이 없으므로 발급해주기
-               Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
-            JwtAuthToken accessToken = jwtAuthTokenProvider.createAuthToken(String.valueOf(recipientId), Role.ADMIN.getCode(), expiredDate);  //토큰 발급
-            newToken = accessToken.getToken();
-        }
-        //토큰 중복 여부 확인
-        IoTSensor sensor = ioTSensorRepository.findByToken(newToken);
-        if(sensor != null) {
-            throw new RegisterSensorFailedException();
-        }
-        //등록
-        IoTSensor newSensor = IoTSensor.builder()
-                .token(newToken)
-                .home(home)
-                .type(type)
+        //센서 등록 여부 확인
+        IoTSensor sensor = ioTSensorRepository.findByToken(token);
+        if(sensor == null) throw new RegisterSensorFailedException();
+        if(sensor.isRegisterHome()) throw new RegisterSensorFailedException();
+
+        // 홈에 센서등록 및 센서 이스레지스터드홈 true
+        home.addSensor(sensor);
+        sensor.updateRegisterHome(true);
+        //dto
+        ResponseIoTSensor.Register dto = ResponseIoTSensor.Register.builder()
+                .registeredToken(token)
                 .build();
-        newSensor = ioTSensorRepository.save(newSensor);
-        home.addSensor(newSensor);
-        //response dto
-        ResponseIoTSensor.Register responseIoTSensor = ResponseIoTSensor.Register.builder()
-                .registeredToken(newSensor.getToken())
-                .build();
-        return Optional.ofNullable(responseIoTSensor);
+        return Optional.ofNullable(dto);
     }
 
     @Transactional
@@ -181,5 +168,34 @@ public class SensorService implements SensorServiceInterface {
                 }
             }
         }
+    }
+
+    @Transactional
+    @Override
+    public void registerUnregisteredSensor(String token, SensorType type) {
+        String newToken = token;
+        if(newToken == null) {
+            //토큰이 없으므로 발급해주기
+            Date expiredDate = Date.from(LocalDateTime.now().plusYears(2).atZone(ZoneId.systemDefault()).toInstant()); // 토큰은 2년 유효
+            JwtAuthToken accessToken = jwtAuthTokenProvider.createAuthToken(String.valueOf(type), Role.ADMIN.getCode(), expiredDate);  //토큰 발급
+            newToken = accessToken.getToken();
+        }
+        //토큰 중복 여부 확인
+        IoTSensor sensor = ioTSensorRepository.findByToken(newToken);
+        if(sensor != null) {
+            throw new RegisterSensorFailedException();
+        }
+        //등록
+        IoTSensor newSensor = IoTSensor.builder()
+                .token(newToken)
+                .type(type)
+                .build();
+        newSensor = ioTSensorRepository.save(newSensor);
+    }
+
+    @Override
+    public Page<ResponseIoTSensor.UnregisteredSensor> getUnregisteredSensorList(Pageable pageable) {
+        Page<IoTSensor> sensors = ioTSensorRepository.findByRegisterHomeFalse(pageable);
+        return sensors.map(ResponseIoTSensor.UnregisteredSensor::of);
     }
 }

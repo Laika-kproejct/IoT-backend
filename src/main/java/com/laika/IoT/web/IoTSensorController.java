@@ -1,5 +1,6 @@
 package com.laika.IoT.web;
 
+import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.exception.errors.CustomJwtRuntimeException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
 import com.laika.IoT.provider.security.JwtAuthToken;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -71,4 +73,30 @@ public class IoTSensorController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/sensor/unregistered")
+    public ResponseEntity<CommonResponse> getUnregisteredSensor(@PageableDefault Pageable pageable) {
+        //미등록센서 리스트를 출력한다
+
+        Page<ResponseIoTSensor.UnregisteredSensor> list = sensorService.getUnregisteredSensorList(pageable);
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .list(list)
+                .message("성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/sensor/unregistered/register")
+    public ResponseEntity<CommonResponse> registerUnregisteredSensor(String token, SensorType type) {
+        //토큰을 입력받아 미등록 센서에 저장한다.
+
+        sensorService.registerUnregisteredSensor(token, type);
+
+        CommonResponse response = CommonResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("성공")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

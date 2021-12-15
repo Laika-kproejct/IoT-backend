@@ -48,26 +48,43 @@ public class SensorServiceTests {
     private QuartzConfig quartzConfig;
 
     @Test
+    @DisplayName("미등록 센서 등록 테스트")
+    @Transactional
+    void registerUnregisteredSensorTest() {
+        sensorService.registerUnregisteredSensor("1234", SensorType.HUMAN_DETECTION);
+        sensorService.registerUnregisteredSensor("12345", SensorType.IN_OUT);
+        sensorService.registerUnregisteredSensor("123456", SensorType.IN_OUT);
+
+
+        Page<ResponseIoTSensor.UnregisteredSensor> list = sensorService.getUnregisteredSensorList(PageRequest.of(0,10));
+
+        for (ResponseIoTSensor.UnregisteredSensor sensorItem : list) {
+            System.out.println("결과:");
+            System.out.println(sensorItem.getType() + sensorItem.getToken() + " " + sensorItem.getTimestamp());
+        }
+    }
+
+    @Test
     @DisplayName("센서 등록 테스트")
     @Transactional
     void registerSensorTest() {
         //관리 대상자 생성
         Home home = new Home();
         home = homeRepository.save(home);
-        //센서 등록
-        RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
-                .homeId(home.getId())
-                .token("aaaa")
-                .type(SensorType.HUMAN_DETECTION)
-                .build();
-        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
+
+        sensorService.registerUnregisteredSensor("1234", SensorType.HUMAN_DETECTION);
+        IoTSensor sensor = ioTSensorRepository.findByToken("1234");
+
+        ResponseIoTSensor.Register responseIoTSensor = sensorService.register(home.getId(), sensor.getToken(), sensor.getType()).orElseGet(()->null);
 
         //검증
         assertNotNull(responseIoTSensor);
         assertNotNull(home.getId());
         System.out.println(responseIoTSensor.getRegisteredToken());
+        System.out.println(sensor.isRegisterHome());
         System.out.println(home.getId()+"아이디임");
     }
+
     @Transactional
     @Test
     @DisplayName("센서 리스트 테스트")
