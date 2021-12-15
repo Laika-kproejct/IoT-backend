@@ -87,7 +87,7 @@ public class SensorService implements SensorServiceInterface {
         System.out.println(sensor.getTimestamp());
         // IN으로 변경
         Home home = sensor.getHome();
-        home.updateStatus(true);
+        if(home != null) home.updateStatus(true);
     }
     @Transactional
     @Override
@@ -158,7 +158,7 @@ public class SensorService implements SensorServiceInterface {
 
                 List<String> tokens = new ArrayList<>();
                 for (FirebaseToken firebaseToken : manager.getTokens()){
-                    tokens.add(firebaseToken.toString());
+                    tokens.add(firebaseToken.getToken());
                 }
                 String title = "집 비상!";
                 String body = warningHome.getAddress() + "확인해주세요.";
