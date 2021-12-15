@@ -47,4 +47,7 @@ public class IoTSensor {
     public void updateRegisterHome(boolean bool) {
         this.registerHome = bool;
     }
+    public void setHome(Home home) {
+        this.home = home;
+    }
 }

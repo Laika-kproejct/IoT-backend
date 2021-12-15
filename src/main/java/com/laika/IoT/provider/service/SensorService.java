@@ -53,8 +53,9 @@ public class SensorService implements SensorServiceInterface {
         if(sensor.isRegisterHome()) throw new RegisterSensorFailedException();
 
         // 홈에 센서등록 및 센서 이스레지스터드홈 true
-        home.addSensor(sensor);
         sensor.updateRegisterHome(true);
+        sensor.setHome(home);
+        home.addSensor(sensor);
         //dto
         ResponseIoTSensor.Register dto = ResponseIoTSensor.Register.builder()
                 .registeredToken(token)
