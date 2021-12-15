@@ -24,9 +24,9 @@ public class QuartzConfig {
         try{
             //job과 트리거 설정
             //20초마다 실행 (확인용)
-            scheduler.scheduleJob(jobDetail, buildJobTrigger("0/20 * * * * ?"));
-            //한시간마다 실행 (진짜 쓸 것)
-            //scheduler.scheduleJob(jobDetail, buildJobTrigger("0 0 0 * * ?"));
+            //scheduler.scheduleJob(jobDetail, buildJobTrigger("0/20 * * * * ?"));
+            //5분마다
+            scheduler.scheduleJob(jobDetail, buildJobTrigger("0 0/5 * * * ?"));
         }
         catch (SchedulerException e) {
             e.printStackTrace();
