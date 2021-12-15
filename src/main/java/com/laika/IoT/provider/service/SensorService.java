@@ -171,8 +171,8 @@ public class SensorService implements SensorServiceInterface {
                 for (FirebaseToken firebaseToken : manager.getTokens()){
                     tokens.add(firebaseToken.toString());
                 }
-                String title = warningHome.getAddress() + "의 집 비상!";
-                String body = "센서 업데이트가 안됨!";
+                String title = "집 비상!";
+                String body = warningHome.getAddress() + "확인해주세요.";
                 try{
                     fcmUtil.sendTokens(tokens,title,body);
                 }
