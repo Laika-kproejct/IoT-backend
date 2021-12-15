@@ -97,6 +97,9 @@ public class SensorService implements SensorServiceInterface {
         System.out.println(sensor.getTimestamp());
         sensor.UpdateTimestamp(new Date());
         System.out.println(sensor.getTimestamp());
+        // IN으로 변경
+        Home home = sensor.getHome();
+        home.updateStatus(true);
     }
     @Transactional
     @Override
