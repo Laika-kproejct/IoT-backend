@@ -123,23 +123,34 @@ public class SensorServiceTests {
         //관리 대상자 생성
         Home home = new Home();
         home = homeRepository.save(home);
-        //센서 등록
+        //센서 생성
         RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
                 .homeId(home.getId())
-                .token("aaaa")
+                .token("1123")
                 .type(SensorType.HUMAN_DETECTION)
                 .build();
+        sensorService.registerUnregisteredSensor(registerDto.getToken(), registerDto.getType());
+        //센서 등록
         sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
         IoTSensor sensor = ioTSensorRepository.findByToken(registerDto.getToken());
 
-        System.out.println(sensor.getTimestamp());
+        //센서 업데이트
+        sensorService.update(sensor.getToken());
+        sensorService.update(sensor.getToken());
+        sensorService.update(sensor.getToken());
+        sensorService.update(sensor.getToken());
+        sensorService.update(sensor.getToken());
+
+       int lastDate;
+//        System.out.println(sensor.getDates().get(lastDate));
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         sensorService.update(sensor.getToken());
-        System.out.println(sensor.getTimestamp());
+        lastDate = sensor.getDates().size()-1;
+        System.out.println(sensor.getDates().get(lastDate));
 
     }
 
@@ -184,8 +195,8 @@ public class SensorServiceTests {
         LocalDateTime testTime2 = LocalDateTime.of(2021,11,17,15,38,30);
         Date testDate = Date.from(testTime1.atZone(ZoneId.systemDefault()).toInstant());
         Date testDate2 = Date.from(testTime2.atZone(ZoneId.systemDefault()).toInstant());
-        sensor1.UpdateTimestamp(testDate);
-        sensor2.UpdateTimestamp(testDate2);
+//        sensor1.UpdateTimestamp(testDate);
+//        sensor2.UpdateTimestamp(testDate2);
 
         sensorService.check(LocalDateTime.now());
     }

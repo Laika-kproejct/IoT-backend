@@ -4,10 +4,7 @@ import com.google.firebase.FirebaseException;
 import com.laika.IoT.core.security.role.Role;
 import com.laika.IoT.core.service.SensorServiceInterface;
 import com.laika.IoT.core.type.SensorType;
-import com.laika.IoT.entity.FirebaseToken;
-import com.laika.IoT.entity.IoTSensor;
-import com.laika.IoT.entity.Home;
-import com.laika.IoT.entity.Manager;
+import com.laika.IoT.entity.*;
 import com.laika.IoT.exception.errors.NotFoundHomeException;
 import com.laika.IoT.exception.errors.NotFoundSensorException;
 import com.laika.IoT.exception.errors.RegisterSensorFailedException;
@@ -82,9 +79,16 @@ public class SensorService implements SensorServiceInterface {
             throw new NotFoundSensorException();
         }
         //해당 센서 타임스탬프 업데이트
-        System.out.println(sensor.getTimestamp());
-        sensor.UpdateTimestamp(new Date());
-        System.out.println(sensor.getTimestamp());
+//        System.out.println(sensor.getTimestamp());
+//        sensor.UpdateTimestamp(new Date());
+//        System.out.println(sensor.getTimestamp());
+
+        SensorDate sensorDate = SensorDate.builder()
+                .ioTSensor(sensor)
+                .timestamp(new Date())
+                .build();
+        sensor.updateSensorDate(sensorDate);
+
         // IN으로 변경
         Home home = sensor.getHome();
         if(home != null) home.updateStatus(true);
@@ -99,9 +103,13 @@ public class SensorService implements SensorServiceInterface {
             throw new NotFoundSensorException();
         }
         //해당 센서 타임스탬프 업데이트
-        System.out.println(sensor.getTimestamp());
-        sensor.UpdateTimestamp(new Date());
-        System.out.println(sensor.getTimestamp());
+
+        SensorDate sensorDate = SensorDate.builder()
+                .ioTSensor(sensor)
+                .timestamp(new Date())
+                .build();
+        sensor.updateSensorDate(sensorDate);
+
         //홈 인아웃 변경
         Home home = sensor.getHome();
 
@@ -125,11 +133,13 @@ public class SensorService implements SensorServiceInterface {
             List<IoTSensor> sensorList = home.getSensors();
             //최신 날짜
             if (!sensorList.isEmpty()) {
-                Date newest = sensorList.get(0).getTimestamp();
+                int newestIndex = sensorList.get(0).getDates().size()-1;
+                Date newest = sensorList.get(0).getDates().get(newestIndex).getTimestamp();
                 for (IoTSensor sensor : sensorList) {
-                    if (sensor.getTimestamp().after(newest)) {
+                    newestIndex = sensor.getDates().size()-1;
+                    if (sensor.getDates().get(newestIndex).getTimestamp().after(newest)) {
                         //최신일 경우
-                        newest = sensor.getTimestamp();
+                        newest = sensor.getDates().get(newestIndex).getTimestamp();
                     }
                 }
                 System.out.println(newest);

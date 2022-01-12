@@ -31,7 +31,7 @@ public class ResponseIoTSensor {
             return MySensor.builder()
                     .Sensorid(ioTSensor.getId())
                     .token(ioTSensor.getToken())
-                    .timestamp(ioTSensor.getTimestamp())
+                    .timestamp(ioTSensor.getDates().get(ioTSensor.getDates().size()-1).getTimestamp())
                     .type(ioTSensor.getType())
                     .build();
         }
@@ -48,7 +48,7 @@ public class ResponseIoTSensor {
             return UnregisteredSensor.builder()
                     .token(ioTSensor.getToken())
                     .type(ioTSensor.getType())
-                    .timestamp(ioTSensor.getTimestamp())
+                    .timestamp(ioTSensor.getDates().get(ioTSensor.getDates().size()-1).getTimestamp())
                     .build();
         }
     }
