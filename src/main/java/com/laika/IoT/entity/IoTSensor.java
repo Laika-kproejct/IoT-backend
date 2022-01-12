@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Table(name="Sensor")
 @Entity
@@ -21,9 +23,12 @@ public class IoTSensor {
     @Column(name="token")
     private String token;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreationTimestamp
-    private Date timestamp = new Date();
+//    @Temporal(TemporalType.TIMESTAMP)
+//    @CreationTimestamp
+//    private Date timestamp = new Date();
+
+    @OneToMany(mappedBy = "ioTSensor")
+    private List<SensorDate> Dates = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name="type")
@@ -41,13 +46,15 @@ public class IoTSensor {
         this.token = token;
         this.type = type;
     }
-    public void UpdateTimestamp(Date timestamp){
-        this.timestamp = timestamp;
-    }
+//    public void UpdateTimestamp(Date timestamp){
+//        this.timestamp = timestamp;
+//    }
     public void updateRegisterHome(boolean bool) {
         this.registerHome = bool;
     }
     public void setHome(Home home) {
         this.home = home;
+    }
+    public void updateSensorDate(SensorDate sensorDate){this.Dates.add(sensorDate);
     }
 }
