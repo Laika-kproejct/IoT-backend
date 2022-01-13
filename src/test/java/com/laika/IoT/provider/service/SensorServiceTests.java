@@ -89,30 +89,49 @@ public class SensorServiceTests {
     @Test
     @DisplayName("센서 리스트 테스트")
     void listSensorTest() {
-        RequestManger.Register dto = RequestManger.Register.builder()
-                .email("hello")
-                .password("itsmypassword")
-                .build();
-        managerService.register(dto);
-        Manager manager = managerRepository.findByEmail(dto.getEmail());
+        //페이지 크기 설정
         Pageable pageable = PageRequest.of(0, 3);
-
-        managerService.registerHome(manager.getEmail(), "경기도 용인시");
-        Home home = homeRepository.findByAddress("경기도 용인시");
-
-        sensorService.register(home.getId(), "123", SensorType.HUMAN_DETECTION);
-        sensorService.register(home.getId(), "1234", SensorType.HUMAN_DETECTION);
-        sensorService.register(home.getId(), "1235", SensorType.HUMAN_DETECTION);
-        sensorService.register(home.getId(), "12325", SensorType.HUMAN_DETECTION);
-        sensorService.register(home.getId(), "123125", SensorType.HUMAN_DETECTION);
+//
+//        RequestManger.Register dto = RequestManger.Register.builder()
+//                .email("hello")
+//                .password("itsmypassword")
+//                .build();
+//        managerService.register(dto);
+//        Manager manager = managerRepository.findByEmail(dto.getEmail());
+//
+//
+//        managerService.registerHome(manager.getEmail(), "경기도 용인시");
+//        Home home = homeRepository.findByAddress("경기도 용인시");
+//
+//        sensorService.register(home.getId(), "123", SensorType.HUMAN_DETECTION);
+//        sensorService.register(home.getId(), "1234", SensorType.HUMAN_DETECTION);
+//        sensorService.register(home.getId(), "1235", SensorType.HUMAN_DETECTION);
+//        sensorService.register(home.getId(), "12325", SensorType.HUMAN_DETECTION);
+//        sensorService.register(home.getId(), "123125", SensorType.HUMAN_DETECTION);
+        //관리 대상자 생성
+        Home home = new Home();
+        home = homeRepository.save(home);
+        //센서 생성
+        RequestIoTSensor.Register registerDto = RequestIoTSensor.Register.builder()
+                .homeId(home.getId())
+                .token("1123")
+                .type(SensorType.HUMAN_DETECTION)
+                .build();
+        sensorService.registerUnregisteredSensor(registerDto.getToken(), registerDto.getType());
+        //센서 등록
+        sensorService.register(registerDto.getHomeId(), registerDto.getToken(), registerDto.getType()).orElseGet(()->null);
+        IoTSensor sensor = ioTSensorRepository.findByToken(registerDto.getToken());
+        //센서 업데이트
+        sensorService.update(sensor.getToken());
+        sensorService.update(sensor.getToken());
 
         System.out.println("home id : " + home.getId());
         Page<ResponseIoTSensor.MySensor> sensorlist = sensorService.sensorlist(home.getId(), pageable);
         System.out.println("총 개수 : " + sensorlist.getTotalElements());
         assertNotNull(sensorlist);
-        for (ResponseIoTSensor.MySensor sensor : sensorlist) {
+        for (ResponseIoTSensor.MySensor sensor1 : sensorlist) {
             System.out.println("결과:");
-            System.out.println(sensor.getSensorid() + sensor.getToken() + " " + sensor.getTimestamp());
+            System.out.println(sensor1.getSensorid() + sensor1.getToken() + " " + sensor1.getSensorDateList());
         }
     }
 
@@ -142,7 +161,6 @@ public class SensorServiceTests {
         sensorService.update(sensor.getToken());
 
        int lastDate;
-//        System.out.println(sensor.getDates().get(lastDate));
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {

@@ -4,6 +4,7 @@ import com.laika.IoT.core.type.SensorType;
 import com.laika.IoT.entity.Home;
 import com.laika.IoT.entity.IoTSensor;
 import com.laika.IoT.entity.Person;
+import com.laika.IoT.entity.SensorDate;
 import lombok.Builder;
 import lombok.Data;
 
@@ -24,14 +25,19 @@ public class ResponseIoTSensor {
     public  static class MySensor {
         private Long Sensorid;
         private String token;
-        private Date timestamp;
+        private List<ResponseSensorDate.MySensorDate> sensorDateList;
         private SensorType type;
 
         public static ResponseIoTSensor.MySensor of(IoTSensor ioTSensor){
+            List<ResponseSensorDate.MySensorDate> sensorDateListDto = new ArrayList<>();
+            for(SensorDate sensorDate : ioTSensor.getDates()){
+                ResponseSensorDate.MySensorDate sensorDateDto = ResponseSensorDate.MySensorDate.of(sensorDate);
+                sensorDateListDto.add(sensorDateDto);
+            }
             return MySensor.builder()
                     .Sensorid(ioTSensor.getId())
                     .token(ioTSensor.getToken())
-                    .timestamp(ioTSensor.getDates().get(ioTSensor.getDates().size()-1).getTimestamp())
+                    .sensorDateList(sensorDateListDto)
                     .type(ioTSensor.getType())
                     .build();
         }

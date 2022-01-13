@@ -23,10 +23,6 @@ public class IoTSensor {
     @Column(name="token")
     private String token;
 
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @CreationTimestamp
-//    private Date timestamp = new Date();
-
     @OneToMany(mappedBy = "ioTSensor")
     private List<SensorDate> Dates = new ArrayList<>();
 
@@ -46,9 +42,7 @@ public class IoTSensor {
         this.token = token;
         this.type = type;
     }
-//    public void UpdateTimestamp(Date timestamp){
-//        this.timestamp = timestamp;
-//    }
+
     public void updateRegisterHome(boolean bool) {
         this.registerHome = bool;
     }

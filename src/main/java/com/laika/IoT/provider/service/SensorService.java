@@ -12,6 +12,7 @@ import com.laika.IoT.provider.security.JwtAuthToken;
 import com.laika.IoT.provider.security.JwtAuthTokenProvider;
 import com.laika.IoT.repository.IoTSensorRepository;
 import com.laika.IoT.repository.HomeRepository;
+import com.laika.IoT.repository.SensorDateRepository;
 import com.laika.IoT.util.FCMUtil;
 import com.laika.IoT.web.dto.RequestIoTSensor;
 import com.laika.IoT.web.dto.ResponseIoTSensor;
@@ -36,7 +37,7 @@ public class SensorService implements SensorServiceInterface {
     private final JwtAuthTokenProvider jwtAuthTokenProvider;
     private final HomeRepository homeRepository;
     private final IoTSensorRepository ioTSensorRepository;
-
+    private final SensorDateRepository sensorDateRepository;
     private final FCMUtil fcmUtil;
 
     @Transactional
@@ -65,7 +66,7 @@ public class SensorService implements SensorServiceInterface {
     public Page<ResponseIoTSensor.MySensor> sensorlist(Long homeId, Pageable pageable) {
         // 홈
         Home home = homeRepository.findById(homeId).orElseThrow(() -> new NotFoundHomeException());
-        //센서
+        //센서와 날짜들 출력
         Page<IoTSensor> sensors = ioTSensorRepository.findByHome(home, pageable);
         return sensors.map(ResponseIoTSensor.MySensor::of);
     }
