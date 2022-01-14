@@ -79,15 +79,11 @@ public class SensorService implements SensorServiceInterface {
         if(sensor == null){
             throw new NotFoundSensorException();
         }
-        //해당 센서 타임스탬프 업데이트
-//        System.out.println(sensor.getTimestamp());
-//        sensor.UpdateTimestamp(new Date());
-//        System.out.println(sensor.getTimestamp());
-
         SensorDate sensorDate = SensorDate.builder()
                 .ioTSensor(sensor)
                 .timestamp(new Date())
                 .build();
+        sensorDateRepository.save(sensorDate);
         sensor.updateSensorDate(sensorDate);
 
         // IN으로 변경
@@ -109,6 +105,7 @@ public class SensorService implements SensorServiceInterface {
                 .ioTSensor(sensor)
                 .timestamp(new Date())
                 .build();
+        sensorDateRepository.save(sensorDate);
         sensor.updateSensorDate(sensorDate);
 
         //홈 인아웃 변경

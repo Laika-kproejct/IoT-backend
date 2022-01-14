@@ -91,23 +91,6 @@ public class SensorServiceTests {
     void listSensorTest() {
         //페이지 크기 설정
         Pageable pageable = PageRequest.of(0, 3);
-//
-//        RequestManger.Register dto = RequestManger.Register.builder()
-//                .email("hello")
-//                .password("itsmypassword")
-//                .build();
-//        managerService.register(dto);
-//        Manager manager = managerRepository.findByEmail(dto.getEmail());
-//
-//
-//        managerService.registerHome(manager.getEmail(), "경기도 용인시");
-//        Home home = homeRepository.findByAddress("경기도 용인시");
-//
-//        sensorService.register(home.getId(), "123", SensorType.HUMAN_DETECTION);
-//        sensorService.register(home.getId(), "1234", SensorType.HUMAN_DETECTION);
-//        sensorService.register(home.getId(), "1235", SensorType.HUMAN_DETECTION);
-//        sensorService.register(home.getId(), "12325", SensorType.HUMAN_DETECTION);
-//        sensorService.register(home.getId(), "123125", SensorType.HUMAN_DETECTION);
         //관리 대상자 생성
         Home home = new Home();
         home = homeRepository.save(home);
